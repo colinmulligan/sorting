@@ -62,7 +62,7 @@ def _merged(xs, ys, cmp=cmp_standard):
 
             
     if i == a and j == b:
-        return new_sorted
+        return new_sorted 
     
     elif i == a:
         for x in range(j, b):
