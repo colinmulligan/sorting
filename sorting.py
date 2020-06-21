@@ -47,8 +47,7 @@ def _merged(xs, ys, cmp=cmp_standard):
     '''
     a = len(xs)
     b = len(ys)
-
-    sorted_list = []
+    new_sorted = []
     i = 0 
     j = 0
 
