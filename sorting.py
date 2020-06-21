@@ -132,11 +132,11 @@ def quick_sorted(xs, cmp=cmp_standard):
         p = xs[0]
         for x in xs:
             if x > p:
-                high.append(x)
+                high_val.append(x)
             elif x < p:
-                low.append(x)
+                low_val.append(x)
             else:
-                equal.append(x)
+                equal_val.append(x)
 
         lower = quick_sorted(low_val, cmp = cmp)
         higher = quick_sorted(high_val, cmp = cmp)
