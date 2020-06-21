@@ -47,8 +47,7 @@ def _merged(xs, ys, cmp=cmp_standard):
     '''
     a = len(xs)
     b = len(ys)
-
-    sorted_list = []
+    new_sorted = []
     i = 0 
     j = 0
 
@@ -89,7 +88,7 @@ def merge_sorted(xs, cmp=cmp_standard):
     You should return a sorted version of the input list xs
     '''
 
-    if len(xs) <= 1:
+    if len(xs) < 2:
         return xs
     
     else:
