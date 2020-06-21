@@ -49,7 +49,8 @@ def _merged(xs, ys, cmp=cmp_standard):
     b = len(ys)
 
     sorted_list = []
-    i, j = 0, 0
+    i = 0 
+    j = 0
 
     while i < a and j < b:
         if (cmp == cmp_standard and xs[i] < ys[j]) or (cmp == cmp_reverse and xs[i] > ys[j]):
