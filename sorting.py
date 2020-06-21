@@ -54,23 +54,25 @@ def _merged(xs, ys, cmp=cmp_standard):
 
     while i < a and j < b:
         if (cmp == cmp_standard and xs[i] < ys[j]) or (cmp == cmp_reverse and xs[i] > ys[j]):
-            sorted_list.append(xs[i])
+            new_sorted.append(xs[i])
             i += 1
         elif (cmp == cmp_standard and xs[i] >= ys[j]) or (cmp == cmp_reverse and xs[i] <= ys[j]):
-            sorted_list.append(ys[j])
+            new_sorted.append(ys[j])
             j += 1
 
+            
     if i == a and j == b:
-        return sorted_list
+        return new_sorted
+    
     elif i == a:
         for x in range(j, b):
-            sorted_list.append(ys[x])
-        return sorted_list
+            new_sorted.append(ys[x])
+        return new_sorted
+    
     elif j == b:
         for x in range(i, a):
-            sorted_list.append(xs[x])
-        return sorted_list
-
+            new_sorted.append(xs[x])
+        return new_sorted
 
 
 def merge_sorted(xs, cmp=cmp_standard):
@@ -89,10 +91,11 @@ def merge_sorted(xs, cmp=cmp_standard):
 
     if len(xs) <= 1:
         return xs
+    
     else:
-        ctr = len(xs)//2
-        left = xs[:ctr]
-        right = xs[ctr:]
+        middle = len(xs)//2
+        left = xs[:middle]
+        right = xs[middle:]
 
         merge_sorted(left, cmp)
         merge_sorted(right, cmp)
@@ -118,25 +121,25 @@ def quick_sorted(xs, cmp=cmp_standard):
     You should return a sorted version of the input list xs
     '''
 
-    low = []
-    high = []
-    equal = []
+    low_val = []
+    high_val = []
+    equal_val = []
 
-    if len(xs) <= 1: 
+    if len(xs) < 2: 
         return xs
 
     else:
-        val = xs[0]
+        p = xs[0]
         for x in xs:
-            if x > val:
+            if x > p:
                 high.append(x)
-            elif x < val:
+            elif x < p:
                 low.append(x)
             else:
                 equal.append(x)
 
-        lower = quick_sorted(low, cmp = cmp)
-        higher = quick_sorted(high, cmp = cmp)
+        lower = quick_sorted(low_val, cmp = cmp)
+        higher = quick_sorted(high_val, cmp = cmp)
 
     if cmp == cmp_standard:
         return lower + equal + higher 
