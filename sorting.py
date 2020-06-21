@@ -142,10 +142,10 @@ def quick_sorted(xs, cmp=cmp_standard):
         higher = quick_sorted(high_val, cmp = cmp)
 
     if cmp == cmp_standard:
-        return lower + equal + higher 
+        return lower + equal_val + higher 
 
     if cmp == cmp_reverse:
-        return higher + equal + lower
+        return higher + equal_val + lower
 
 
 def quick_sort(xs, cmp=cmp_standard):
