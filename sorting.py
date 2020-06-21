@@ -49,20 +49,21 @@ def _merged(xs, ys, cmp=cmp_standard):
     b = len(ys)
 
     sorted_list = []
-    i, j = 0, 0
+    j = 0
+    k = 0
 
-    while i < a and j < b:
-        if (cmp == cmp_standard and xs[i] < ys[j]) or (cmp == cmp_reverse and xs[i] > ys[j]):
-            sorted_list.append(xs[i])
-            i += 1
-        elif (cmp == cmp_standard and xs[i] >= ys[j]) or (cmp == cmp_reverse and xs[i] <= ys[j]):
-            sorted_list.append(ys[j])
+    while j < a and k < b:
+        if (cmp == cmp_standard and xs[j] < ys[k]) or (cmp == cmp_reverse and xs[j] > ys[k]):
+            sorted_list.append(xs[j])
             j += 1
+        elif (cmp == cmp_standard and xs[j] >= ys[k]) or (cmp == cmp_reverse and xs[j] <= ys[k]):
+            sorted_list.append(ys[k])
+            k += 1
 
-    if i == a and j == b:
+    if j == a and k == b:
         return sorted_list
-    elif i == a:
-        for x in range(j, b):
+    elif j == a:
+        for x in range(k, b):
             sorted_list.append(ys[x])
         return sorted_list
     elif j == b:
