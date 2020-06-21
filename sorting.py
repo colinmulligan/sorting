@@ -2,7 +2,6 @@
 '''
 Python provides built-in sort/sorted functions that use timsort internally.
 You cannot use these built-in functions anywhere in this file.
-
 Every function in this file takes a comparator `cmp` as input which controls how the elements of the list should be compared against each other.
 If cmp(a,b) returns -1, then a<b;
 if cmp(a,b) returns  1, then a>b;
@@ -46,39 +45,37 @@ def _merged(xs, ys, cmp=cmp_standard):
     and returns a new list containing the elements of both xs and ys.
     Runs in linear time.
     '''
-    if cmp == cmp_reverse:
-        xs.reverse()
-        ys.reverse()
-    new = [0]*(len(xs) + len(ys))
-    i = j = m = 0
-    while i < len(xs) and j < len(ys):
-        if xs[i] < ys[j]:
-            new[m] = xs[i]
-            i+=1
-        else:
-            new[m] = ys[j]
-            j+=1
-        m+=1
-    while i < len(xs):
-        new[m] = xs[i]
-        i+=1
-        m+=1
-    while j < len(ys):
-        new[m] = ys[j]
-        j+=1
-        m+=1
-    if cmp == cmp_reverse:
-        new.reverse()
-        return new
-    else:
-        return new
+    a = len(xs)
+    b = len(ys)
+
+    sorted_list = []
+    i, j = 0, 0
+
+    while i < a and j < b:
+        if (cmp == cmp_standard and xs[i] < ys[j]) or (cmp == cmp_reverse and xs[i] > ys[j]):
+            sorted_list.append(xs[i])
+            i += 1
+        elif (cmp == cmp_standard and xs[i] >= ys[j]) or (cmp == cmp_reverse and xs[i] <= ys[j]):
+            sorted_list.append(ys[j])
+            j += 1
+
+    if i == a and j == b:
+        return sorted_list
+    elif i == a:
+        for x in range(j, b):
+            sorted_list.append(ys[x])
+        return sorted_list
+    elif j == b:
+        for x in range(i, a):
+            sorted_list.append(xs[x])
+        return sorted_list
+
 
 
 def merge_sorted(xs, cmp=cmp_standard):
     '''
     Merge sort is the standard O(n log n) sorting algorithm.
     Recall that the merge sort pseudo code is:
-
         if xs has 1 element
             it is sorted, so return xs
         else
@@ -86,41 +83,20 @@ def merge_sorted(xs, cmp=cmp_standard):
             sort the left
             sort the right
             merge the two sorted halves
-
     You should return a sorted version of the input list xs
     '''
+
     if len(xs) <= 1:
         return xs
     else:
-        mid = len(xs)//2
-        left = xs[:mid]
-        right = xs[mid:]
-        merge_sorted(left)
-        merge_sorted(right)
-        i = j = m = 0
-        while i < len(left) and j < len(right):
-            if left[i] < right[j]:
-                xs[m] = left[i]
-                i+=1
-            else:
-                xs[m] = right[j]
-                j+=1
-            m+=1
-        while i < len(left):
-            xs[m] = left[i]
-            i+=1
-            m+=1
-        while j < len(right):
-            xs[m] = right[j]
-            j+=1
-            m+=1
-        if cmp == cmp_reverse:
-            xs.reverse()
-            return xs
-        else:
-            return xs
+        ctr = len(xs)//2
+        left = xs[:ctr]
+        right = xs[ctr:]
 
+        merge_sorted(left, cmp)
+        merge_sorted(right, cmp)
 
+        return _merged(merge_sorted(left, cmp=cmp), merge_sorted(right, cmp=cmp), cmp = cmp)
 
 def quick_sorted(xs, cmp=cmp_standard):
     '''
@@ -129,9 +105,7 @@ def quick_sorted(xs, cmp=cmp_standard):
     Instead of splitting the list down the middle,
     a "pivot" value is randomly selected, 
     and the list is split into a "less than" sublist and a "greater than" sublist.
-
     The pseudocode is:
-
         if xs has 1 element
             it is sorted, so return xs
         else
@@ -140,42 +114,31 @@ def quick_sorted(xs, cmp=cmp_standard):
             put all the values greater than p in a list
             sort both lists recursively
             return the concatenation of (less than, p, and greater than)
-
     You should return a sorted version of the input list xs
     '''
-    if len(xs) <= 1:
+
+    low = []
+    high = []
+    equal = []
+
+    if len(xs) <= 1: 
         return xs
+
     else:
-        less = []
-        greater = []
-        pivots = []
-        p = random.randint(0,len(xs)-1)
+        val = xs[0]
         for x in xs:
-            if x < xs[p]:
-                less += [x]
-            elif x > xs[p]:
-                greater += [x]
+            if x > val:
+                high.append(x)
+            elif x < val:
+                low.append(x)
             else:
-                pivots += [xs[p]]
-        quick_sorted(less)
-        quick_sorted(greater)
-        if cmp == cmp_standard:
-            return quick_sorted(less) + pivots + quick_sorted(greater)
-        else:
-            new = quick_sorted(less) + pivots + quick_sorted(greater)
-            new.reverse()
-            return new
+                equal.append(x)
 
+        lower = quick_sorted(low, cmp = cmp)
+        higher = quick_sorted(high, cmp = cmp)
 
-def quick_sort(xs, cmp=cmp_standard):
-    '''
-    EXTRA CREDIT:
-    The main advantage of quick_sort is that it can be implemented in-place,
-    i.e. with O(1) memory requirement.
-    Merge sort, on the other hand, has an O(n) memory requirement.
+    if cmp == cmp_standard:
+        return lower + equal + higher 
 
-    Follow the pseudocode of the Lomuto partition scheme given on wikipedia
-    (https://en.wikipedia.org/wiki/Quicksort#Algorithm)
-    to implement quick_sort as an in-place algorithm.
-    You should directly modify the input xs variable instead of returning a copy of the list.
-    '''
+    if cmp == cmp_reverse:
+        return higher + equal + lower
