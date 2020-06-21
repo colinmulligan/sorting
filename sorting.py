@@ -49,21 +49,20 @@ def _merged(xs, ys, cmp=cmp_standard):
     b = len(ys)
 
     sorted_list = []
-    j = 0
-    k = 0
+    i, j = 0, 0
 
-    while j < a and k < b:
-        if (cmp == cmp_standard and xs[j] < ys[k]) or (cmp == cmp_reverse and xs[j] > ys[k]):
-            sorted_list.append(xs[j])
+    while i < a and j < b:
+        if (cmp == cmp_standard and xs[i] < ys[j]) or (cmp == cmp_reverse and xs[i] > ys[j]):
+            sorted_list.append(xs[i])
+            i += 1
+        elif (cmp == cmp_standard and xs[i] >= ys[j]) or (cmp == cmp_reverse and xs[i] <= ys[j]):
+            sorted_list.append(ys[j])
             j += 1
-        elif (cmp == cmp_standard and xs[j] >= ys[k]) or (cmp == cmp_reverse and xs[j] <= ys[k]):
-            sorted_list.append(ys[k])
-            k += 1
 
-    if j == a and k == b:
+    if i == a and j == b:
         return sorted_list
-    elif j == a:
-        for x in range(k, b):
+    elif i == a:
+        for x in range(j, b):
             sorted_list.append(ys[x])
         return sorted_list
     elif j == b:
@@ -143,3 +142,16 @@ def quick_sorted(xs, cmp=cmp_standard):
 
     if cmp == cmp_reverse:
         return higher + equal + lower
+
+
+def quick_sort(xs, cmp=cmp_standard):
+    '''
+    EXTRA CREDIT:
+    The main advantage of quick_sort is that it can be implemented in-place,
+    i.e. with O(1) memory requirement.
+    Merge sort, on the other hand, has an O(n) memory requirement.
+    Follow the pseudocode of the Lomuto partition scheme given on wikipedia
+    (https://en.wikipedia.org/wiki/Quicksort#Algorithm)
+    to implement quick_sort as an in-place algorithm.
+    You should directly modify the input xs variable instead of returning a copy of the list.
+    '''
